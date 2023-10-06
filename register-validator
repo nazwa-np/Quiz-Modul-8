@@ -1,0 +1,26 @@
+const { body, validationResult } = require('express-validator');
+
+const registerValidator = [
+    body("email")
+    .notEmpty().withMessage("Nama wajib diisi")
+    .isEmail().withMessage("Email wajib diisi"),
+    body("password")
+    .notEmpty().withMessage("Password wajib diisi")
+    .isLength({ min : 8}).withMessage("Password minimal 8 karakter"),
+    body("ttl")
+    .notEmpty().withMessage("Tempat tanggal lahir wajib diisi")
+    .matches(/^\d{4}-\d{2}-\d{2}$/).withMessage("TTL harus dalam format tahun-bulan-tanggal"),
+    body("bio")
+    .notEmpty().withMessage("Bio wajib diisi")
+    .isLength({ min: 30, max: 999 }).withMessage("Bio harus memiliki panjang minimal 30 karakter dan maksimal 999 karakter"),
+    body("hobi")
+    .optional()
+    .isString().withMessage('Hobi harus berupa string'),
+    body("pendidikan")
+    .optional().isArray().custom((value) => {
+        const allowedValues = ['SD', 'SMP', 'SMA', 'SMK', 'S1', 'S2', 'S3'];
+        return value.every((item) => allowedValues.includes(item));
+      }).withMessage('Pendidikan harus berupa array yang berisi elemen yang valid'),
+    ];
+
+module.exports =  registerValidator;
